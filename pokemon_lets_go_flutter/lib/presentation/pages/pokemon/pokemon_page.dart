@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:pokemon_lets_go_flutter/presentation/pages/pokemon/pokemon_bloc.dart';
 
 import '../../../domain/pokemon_item_list_model.dart';
