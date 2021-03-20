@@ -1,21 +1,25 @@
 import 'dart:async';
-
+import 'package:flutter/material.dart';
+import 'package:pokemon_lets_go_flutter/presentation/pages/pokemon/pokemon_page.dart';
 import 'package:pokemon_lets_go_flutter/core/base_bloc.dart';
 import 'package:pokemon_lets_go_flutter/domain/pokemon_item_list_model.dart';
 import 'package:pokemon_lets_go_flutter/presentation/pages/home/home_events.dart';
 import 'package:pokemon_lets_go_flutter/repositories/pokemon_repository.dart';
 import 'package:rxdart/subjects.dart';
 
+import '../../../domain/pokemon_item_list_model.dart';
+
 class HomeBloc extends BaseBloc {
   PokemonRepository _pokemonRepository;
 
   /// Quantidade de pokémon por get
   int _pokemonListLimit = 20;
+
   /// Quantidade de pokémon pulado por get
   int _pokemonListOffset = 0;
 
   StreamSubscription _subsEvent;
-  
+
   HomeBloc() {
     _pokemonRepository = PokemonRepository();
 
@@ -25,6 +29,13 @@ class HomeBloc extends BaseBloc {
     // Busca todos pokemon no momento da criação da classe
     onEventChanged(LoadPokemon());
   }
+
+  void openPokemonPage(PokemonItemListModel pokemon, BuildContext context) =>
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PokemonPage(pokemonItemListModel: pokemon)),
+      );
 
   /// Faz um "DE/PARA", convertendo o evento recebido para uma chamada de método
   void _handleEvents(HomeEvents event) {
@@ -38,27 +49,25 @@ class HomeBloc extends BaseBloc {
     final withLoading = _pokemonController.value == null;
 
     doOnlineAction(
-      withLoading: withLoading,
-      action: () async {
-        final remoteList = await _pokemonRepository.getAll(
-          limit: _pokemonListLimit,
-          offset: _pokemonListOffset
-        );
+        withLoading: withLoading,
+        action: () async {
+          final remoteList = await _pokemonRepository.getAll(
+              limit: _pokemonListLimit, offset: _pokemonListOffset);
 
-        // Adiciona 20 para "passar de página"
-        _pokemonListOffset += 20;
+          // Adiciona 20 para "passar de página"
+          _pokemonListOffset += 20;
 
-        final actualList = _pokemonController.value ?? [];
-        // Soma as duas listas e remove duplicatas
-        final newList = (actualList + remoteList).toSet().toList();
+          final actualList = _pokemonController.value ?? [];
+          // Soma as duas listas e remove duplicatas
+          final newList = (actualList + remoteList).toSet().toList();
 
-        _onPokemonListChanged(newList);
-      }
-    );
+          _onPokemonListChanged(newList);
+        });
   }
 
   final _pokemonController = BehaviorSubject<List<PokemonItemListModel>>();
-  Function(List<PokemonItemListModel>) get _onPokemonListChanged => _pokemonController.sink.add;
+  Function(List<PokemonItemListModel>) get _onPokemonListChanged =>
+      _pokemonController.sink.add;
   Stream<List<PokemonItemListModel>> get pokemon => _pokemonController.stream;
 
   final _eventsController = BehaviorSubject<HomeEvents>();
@@ -75,5 +84,5 @@ class HomeBloc extends BaseBloc {
 
     _eventsController.drain<dynamic>();
     _eventsController.close();
-  } 
+  }
 }
