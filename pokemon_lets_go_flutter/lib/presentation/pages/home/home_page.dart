@@ -113,15 +113,14 @@ class _HomePageState extends State<HomePage> {
           final cardColor = snapshot.data;
 
           return GestureDetector(
+            key: Key('pokemon-${pokemon.nameDisplay}'),
             onTap: () => _bloc.openPokemonPage(pokemon, context),
             child: Card(
               margin: const EdgeInsets.all(0.0),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: MediaQuery.of(context).size.height * 0.11,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    color: cardColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(4.0))),
+                decoration: BoxDecoration(color: cardColor, borderRadius: const BorderRadius.all(Radius.circular(4.0))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -136,8 +135,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Text(
                             pokemon.nameDisplay,
-                            style: TextStyle(
-                                color: cardColor.constrast(), fontSize: 18.0),
+                            style: TextStyle(color: cardColor.constrast(), fontSize: 18.0),
                           ),
                         ],
                       ),
@@ -148,9 +146,7 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.3,
                           decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: NetworkImage(pokemon.spriteUrl))),
+                              image: DecorationImage(fit: BoxFit.fitHeight, image: NetworkImage(pokemon.spriteUrl))),
                         ),
                       ],
                     ),
@@ -172,10 +168,8 @@ class _HomePageState extends State<HomePage> {
         child: Opacity(
           opacity: 0.5,
           child: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.fitHeight,
-                    image: AssetImage('assets/poke_ball.png'))),
+            decoration:
+                BoxDecoration(image: DecorationImage(fit: BoxFit.fitHeight, image: AssetImage('assets/poke_ball.png'))),
           ),
         ),
       ),
@@ -184,8 +178,7 @@ class _HomePageState extends State<HomePage> {
 
   /// Devolve a cor dominante de uma imagem
   Future<Color> _getMainColor(ImageProvider imageProvider) async {
-    final paletteGenerator =
-        await PaletteGenerator.fromImageProvider(imageProvider);
+    final paletteGenerator = await PaletteGenerator.fromImageProvider(imageProvider);
 
     return paletteGenerator.dominantColor.color;
   }
