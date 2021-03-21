@@ -8,12 +8,16 @@
     "test": "test"
   },
   "scripts": {
+    "start": "node test/appium/test.js",
+    "ios": "APPIUM_OS=ios npm start",
+    "android": "APPIUM_OS=android npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "appium-flutter-finder": "0.0.22",
     "webdriverio": "^7.2.1"
   }
 }
